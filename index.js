@@ -14,6 +14,7 @@ exports.updateUser = functions.firestore
 
         const progress = change.after.get("progress");
         const level = change.after.get("level");
+        const beforeProgress = change.before.get("progress");
 
         const date = new Date();
         var day = date.getDate();
@@ -29,10 +30,12 @@ exports.updateUser = functions.firestore
 
         let lastActivity = month + " " + day + " " + date.getFullYear() + " " + hour + ":" + minutes;
 
-        console.log("after data: " + change.before.get("progress") + " | " + change.before.get("level") + " | " + change.before.get("lastActivity"));
+        console.log("after data: " + beforeProgress + " | " + change.before.get("level") + " | " + change.before.get("lastActivity"));
         console.log("before data: " + progress + " | " + level + " | " + lastActivity);
 
-        change.after.ref.update({
-            lastActivity: lastActivity
-        });
+        if (beforeProgress != progress) {
+            change.after.ref.update({
+                lastActivity: lastActivity
+            });
+        }
     });
